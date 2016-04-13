@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--emmet string:
+
+<shop>
+	attribute_groups>(attribute_group>id{$}+name)*2
+
+	categories>(category>id{$}+title{Category $$}+parent)*3
+
+	currencies>(currency>id{1}+rate{1}+amount{,-}+cent_factor{100}+code{CZK})
+	
+	manufacturers>(manufacturer>id{$}+name{Manufacturer $})*2
+	
+	order_states>(order_state>id{$}+name)*3
+
+	products>(product>id{$}+code{PRODUCT$$}+manufacturer_id{1}+title{Product $$}+description(lorem10)+(categories>category_id)+media>(image>path+cover{true})+(specified_variants>specified_variant>variant_id+variant_option_id)+(variants>variant_id))*2
+
+	variant_options>(variant_option>id{1}+variant_id{1}+name{Červená})+(variant_option>id{2}+variant_id{1}+name{Černá})+(variant_option>id{3}+variant_id{1}+name{Zelená})+(variant_option>id{4}+variant_id{2}+name{S})+(variant_option>id{5}+variant_id{2}+name{M})+(variant_option>id{6}+variant_id{2}+name{L})+(variant_option>id{7}+variant_id{3}+name{0.5l})+(variant_option>id{8}+variant_id{3}+name{1l})
+	
+	varianted_products>(varianted_product>id{$}+product_id+(money>currency_id+amount)+weight+stock+media>(image>path+cover{true})+ean+code{VARIANTED_PRODUCT$$}+specified_variants>specified_variant>(variant_id+variant_option_id))*2
+
+	variants>(variant>id{1}+name{Barva})+(Variant>id{2}+name{Velikost})+(variant>id{3}+name{Velikost})
+</shop>
+
+-->
+
+<shop>
+	<currencies>
+		<currency>
+			<id>1</id>
+			<rate>1</rate>
+			<amount>,-</amount>
+			<cent_factor>100</cent_factor>
+			<code>CZK</code>
+		</currency>
+	</currencies>
+
+	<order_states>
+		<order_state>
+			<id>1</id>
+			<name>Vytvořeno</name>
+		</order_state>
+		<order_state>
+			<id>2</id>
+			<name>Uhrazeno</name>
+		</order_state>
+		<order_state>
+			<id>3</id>
+			<name>Dokončeno</name>
+		</order_state>
+	</order_states>
+
+	<attribute_groups>
+		<attribute_group>
+			<id>1</id>
+			<name>Obecné</name>
+		</attribute_group>
+		<attribute_group>
+			<id>2</id>
+			<name>Skryté</name>
+		</attribute_group>
+	</attribute_groups>
+
+	<manufacturers>
+		<manufacturer>
+			<id>1</id>
+			<name>Manufacturer 1</name>
+		</manufacturer>
+		<manufacturer>
+			<id>2</id>
+			<name>Manufacturer 2</name>
+		</manufacturer>
+	</manufacturers>
+
+	<categories>
+		<category>
+			<id>1</id>
+			<title>Category 01</title>
+			<parent>0</parent>
+		</category>
+		<category>
+			<id>2</id>
+			<title>Category 02</title>
+			<parent>1</parent>
+		</category>
+		<category>
+			<id>3</id>
+			<title>Category 03</title>
+			<parent>2</parent>
+		</category>
+	</categories>
+
+	<variants>
+		<variant>
+			<id>1</id>
+			<name>Barva</name>
+		</variant>
+		<variant>
+			<id>2</id>
+			<name>Velikost</name>
+		</variant>
+		<variant>
+			<id>3</id>
+			<name>Velikost</name>
+		</variant>
+	</variants>
+
+	<variant_options>
+		<variant_option>
+			<id>1</id>
+			<variant_id>1</variant_id>
+			<name>Červená</name>
+		</variant_option>
+		<variant_option>
+			<id>2</id>
+			<variant_id>1</variant_id>
+			<name>Černá</name>
+		</variant_option>
+		<variant_option>
+			<id>3</id>
+			<variant_id>1</variant_id>
+			<name>Zelená</name>
+		</variant_option>
+		<variant_option>
+			<id>4</id>
+			<variant_id>2</variant_id>
+			<name>S</name>
+		</variant_option>
+		<variant_option>
+			<id>5</id>
+			<variant_id>2</variant_id>
+			<name>M</name>
+		</variant_option>
+		<variant_option>
+			<id>6</id>
+			<variant_id>2</variant_id>
+			<name>L</name>
+		</variant_option>
+		<variant_option>
+			<id>7</id>
+			<variant_id>3</variant_id>
+			<name>0.5l</name>
+		</variant_option>
+		<variant_option>
+			<id>8</id>
+			<variant_id>3</variant_id>
+			<name>1l</name>
+		</variant_option>
+	</variant_options>
+
+	<products>
+		<product>
+			<id>1</id>
+			<code>PRODUCT01</code>
+			<manufacturer_id>1</manufacturer_id>
+			<title>Product 01</title>
+			<description>lorem ipsum dolor sit amet, consectetur adipisicing elit. esse, laboriosam.
+			</description>
+			<categories>
+				<category_id>1</category_id>
+				<category_id>2</category_id>
+			</categories>
+			<media></media>
+			<specified_variants>
+				<specified_variant>
+					<variant_id>2</variant_id>
+					<variant_option_id>5</variant_option_id>
+				</specified_variant>
+			</specified_variants>
+			<variants>
+				<variant_id>1</variant_id>
+			</variants>
+		</product>
+		<product>
+			<id>2</id>
+			<code>PRODUCT02</code>
+			<manufacturer_id>1</manufacturer_id>
+			<title>Product 02</title>
+			<description>ipsam alias inventore provident distinctio sint velit temporibus quo sequi!
+			</description>
+			<categories>
+				<category_id>1</category_id>
+			</categories>
+			<media>
+				<image>
+					<path>sample03.jpg</path>
+					<cover>true</cover>
+				</image>
+			</media>
+			<specified_variants>
+				<specified_variant>
+					<variant_id>3</variant_id>
+					<variant_option_id>2</variant_option_id>
+				</specified_variant>
+			</specified_variants>
+			<variants>
+			</variants>
+		</product>
+		<product>
+			<id>3</id>
+			<code>PRODUCT03</code>
+			<manufacturer_id>2</manufacturer_id>
+			<title>Product 03</title>
+			<description>ipsam alias inventore provident distinctio sint velit temporibus quo sequi!
+			</description>
+			<categories>
+				<category_id>2</category_id>
+				<category_id>3</category_id>
+			</categories>
+			<media>
+			</media>
+			<specified_variants>
+			</specified_variants>
+			<variants>
+				<variant_id>1</variant_id>
+				<variant_id>3</variant_id>
+			</variants>
+		</product>
+	</products>
+	
+	<varianted_products>
+		<varianted_product>
+			<id>1</id>
+			<product_id>1</product_id>
+			<money>
+				<currency_id>1</currency_id>
+				<amount>154</amount>
+				<type>plain</type>
+			</money>
+			<weight>247</weight>
+			<stock>15</stock>
+			<media>
+				<image>
+					<path>sample01.jpg</path>
+					<cover>true</cover>
+				</image>
+			</media>
+			<ean>9876547885127</ean>
+			<code>VARIANTED_PRODUCT01</code>
+			<specified_variants>
+				<specified_variant>
+					<variant_id>1</variant_id>
+					<variant_option_id>1</variant_option_id>
+				</specified_variant>
+			</specified_variants>
+		</varianted_product>
+		<varianted_product>
+			<id>2</id>
+			<product_id>1</product_id>
+			<money>
+				<currency_id>1</currency_id>
+				<amount>150</amount>
+				<type>plain</type>
+			</money>
+			<weight>247</weight>
+			<stock>12</stock>
+			<media>
+				<image>
+					<path>sample02.jpg</path>
+					<cover>true</cover>
+				</image>
+			</media>
+			<ean>2987654788517</ean>
+			<code>VARIANTED_PRODUCT02</code>
+			<specified_variants>
+				<specified_variant>
+					<variant_id>1</variant_id>
+					<variant_option_id>2</variant_option_id>
+				</specified_variant>
+			</specified_variants>
+		</varianted_product>
+		<varianted_product>
+			<id>3</id>
+			<product_id>2</product_id>
+			<money>
+				<currency_id>1</currency_id>
+				<amount>273</amount>
+				<type>plain</type>
+			</money>
+			<weight>517</weight>
+			<stock>9</stock>
+			<media></media>
+			<ean>8629875478517</ean>
+			<code>VARIANTED_PRODUCT03</code>
+			<specified_variants>
+			</specified_variants>
+		</varianted_product>
+		<varianted_product>
+			<id>4</id>
+			<product_id>3</product_id>
+			<money>
+				<currency_id>1</currency_id>
+				<amount>473</amount>
+				<type>plain</type>
+			</money>
+			<weight>810</weight>
+			<stock>3</stock>
+			<media>
+				<image>
+					<path>sample04.jpg</path>
+					<cover>true</cover>
+				</image>
+			</media>
+			<ean>4785186298757</ean>
+			<code>VARIANTED_PRODUCT04</code>
+			<specified_variants>
+				<specified_variant>
+					<variant_id>1</variant_id>
+					<variant_option_id>3</variant_option_id>
+				</specified_variant>
+				<specified_variant>
+					<variant_id>3</variant_id>
+					<variant_option_id>7</variant_option_id>
+				</specified_variant>
+			</specified_variants>
+		</varianted_product>
+		<varianted_product>
+			<id>5</id>
+			<product_id>3</product_id>
+			<money>
+				<currency_id>1</currency_id>
+				<amount>421</amount>
+				<type>plain</type>
+			</money>
+			<weight>810</weight>
+			<stock>4</stock>
+			<media>
+				<image>
+					<path>sample05.jpg</path>
+					<cover>true</cover>
+				</image>
+			</media>
+			<ean>5186478298757</ean>
+			<code>VARIANTED_PRODUCT05</code>
+			<specified_variants>
+				<specified_variant>
+					<variant_id>1</variant_id>
+					<variant_option_id>1</variant_option_id>
+				</specified_variant>
+				<specified_variant>
+					<variant_id>3</variant_id>
+					<variant_option_id>7</variant_option_id>
+				</specified_variant>
+			</specified_variants>
+		</varianted_product>
+	</varianted_products>
+</shop>
