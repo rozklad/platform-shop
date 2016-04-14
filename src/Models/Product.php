@@ -5,15 +5,15 @@ use Cartalyst\Attributes\EntityInterface;
 use Illuminate\Database\Eloquent\Model;
 use Platform\Attributes\Traits\EntityTrait;
 use Cartalyst\Support\Traits\NamespacedEntityTrait;
-use Sanatorium\Shoppricing\Traits\PriceableTrait;
-use Sanatorium\Shopcategories\Traits\CategoryTrait;
-use Sanatorium\Shopmanufacturers\Traits\ManufacturerTrait;
+use Sanatorium\Pricing\Traits\PriceableTrait;
+use Sanatorium\Categories\Traits\CategoryTrait;
+use Sanatorium\Manufacturers\Traits\ManufacturerTrait;
 use Cviebrock\EloquentSluggable\SluggableTrait;
 use Sanatorium\Inputs\Traits\MediableTrait;
 use Sanatorium\Thumbs\Traits\ThumbTrait;
 use Cartalyst\Tags\TaggableTrait;
 use Cartalyst\Tags\TaggableInterface;
-use Sanatorium\Shopstock\Traits\StockTrait;
+use Sanatorium\Stock\Traits\StockTrait;
 
 class Product extends Model implements EntityInterface, TaggableInterface {
 
@@ -61,7 +61,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 	{
 		if ( class_exists('\Category') ) {
 			// Categories are installed, return better optimized SEO url
-			return route('sanatorium.shopcategories.product.view', $this->slug);
+			return route('sanatorium.categories.product.view', $this->slug);
 		}
 
 		return route('sanatorium.shop.products.view', $this->slug);
