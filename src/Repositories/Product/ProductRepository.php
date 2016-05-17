@@ -131,14 +131,14 @@ class ProductRepository implements ProductRepositoryInterface {
 		if ($messages->isEmpty())
 		{
 			// Save the product
-			$product->fill($data)->save();
+			// Resluggify
+			if ( method_exists($product, 'resluggify') )
+				$product->fill($data)->resluggify()->save();
+			else
+				$product->fill($data)->save();
 
 			// Set the tags on the page entry
             $this->tags->set($product, $tags);
-
-            // Resluggify
-            if ( method_exists($product, 'resluggify') )
-            	$product->resluggify()->save();
 
             // Set categories
             $product->categories()->sync($categories);
@@ -186,14 +186,14 @@ class ProductRepository implements ProductRepositoryInterface {
 		if ($messages->isEmpty())
 		{
 			// Update the product
-			$product->fill($data)->save();
+			// Resluggify
+			if ( method_exists($product, 'resluggify') )
+				$product->fill($data)->resluggify()->save();
+			else
+				$product->fill($data)->save();
 
 			// Set the tags on the page entry
             $this->tags->set($product, $tags);
-
-            // Resluggify
-            if ( method_exists($product, 'resluggify') )
-            	$product->resluggify()->save();
 
             // Set categories
             $product->categories()->sync($categories);
