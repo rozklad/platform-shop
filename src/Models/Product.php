@@ -25,7 +25,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		ManufacturerTrait, 
 		SluggableTrait, 
 		MediableTrait, 
-		ThumbTrait,
+		//ThumbTrait,
 		StockTrait;
 
 	protected $sluggable = [
@@ -322,5 +322,24 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		}
 	}
 
+	public function coverThumb()
+	{
+		if ( !$this->product_cover )	// @todo: thumbnail
+			return null;
+
+		$medium = app('platform.media')->find($this->product_cover);
+
+		if ( !is_object($medium ) )
+			return null;
+
+		return url($medium->thumbnail);
+	}
+
+	public function setCategoriesFromArray($categories = [])
+	{
+
+		// sets categories to object
+
+	}
 
 }

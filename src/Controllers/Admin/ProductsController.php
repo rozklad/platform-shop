@@ -81,7 +81,7 @@ class ProductsController extends AdminController {
 		{
 			$element->edit_uri = route('admin.sanatorium.shop.products.edit', $element->id);
 
-			$element->imgurl = $element->coverThumb(50, 50);
+			$element->imgurl = $element->coverThumb();
 
 			return $element;
 		};
