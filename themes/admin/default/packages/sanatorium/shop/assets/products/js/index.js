@@ -6,16 +6,16 @@ var Extension;
 	'use strict';
 
 	Extension = Extension || {
-		Index: {},
-	};
+				Index: {},
+			};
 
 	// Initialize functions
 	Extension.Index.init = function()
 	{
 		Extension.Index
-			.datePicker()
-			.dataGrid()
-			.listeners()
+				.datePicker()
+				.dataGrid()
+				.listeners()
 		;
 	};
 
@@ -23,12 +23,12 @@ var Extension;
 	Extension.Index.listeners = function()
 	{
 		Platform.Cache.$body
-			.on('click', '[data-grid-row]', Extension.Index.checkRow)
-			.on('click', '[data-grid-row] a', Extension.Index.titleClick)
-			.on('click', '[data-grid-checkbox]', Extension.Index.checkboxes)
-			.on('click', '#modal-confirm a.confirm', Extension.Index.bulkActions)
-			.on('click', '[data-grid-calendar-preset]', Extension.Index.calendarPresets)
-			.on('click', '[data-grid-bulk-action]:not([data-grid-bulk-action="delete"])', Extension.Index.bulkActions)
+				.on('click', '[data-grid-row]', Extension.Index.checkRow)
+				.on('click', '[data-grid-row] a', Extension.Index.titleClick)
+				.on('click', '[data-grid-checkbox]', Extension.Index.checkboxes)
+				.on('click', '#modal-confirm button.confirm', Extension.Index.bulkActions)
+				.on('click', '[data-grid-calendar-preset]', Extension.Index.calendarPresets)
+				.on('click', '[data-grid-bulk-action]:not([data-grid-bulk-action="delete"])', Extension.Index.bulkActions)
 		;
 
 		return this;
@@ -83,8 +83,8 @@ var Extension;
 		}
 
 		$('[data-grid-checkbox="all"]')
-			.prop('disabled', rows < 1)
-			.prop('checked', rows < 1 ? false : rows === checked)
+				.prop('disabled', rows < 1)
+				.prop('checked', rows < 1 ? false : rows === checked)
 		;
 	};
 
@@ -130,17 +130,17 @@ var Extension;
 		{
 			case 'day':
 				start = end = moment().subtract(1, 'day').startOf('day').format('MM/DD/YYYY');
-			break;
+				break;
 
 			case 'week':
 				start = moment().startOf('week').format('MM/DD/YYYY');
 				end   = moment().endOf('week').format('MM/DD/YYYY');
-			break;
+				break;
 
 			case 'month':
 				start = moment().startOf('month').format('MM/DD/YYYY');
 				end   = moment().endOf('month').format('MM/DD/YYYY');
-			break;
+				break;
 
 			default:
 		}
@@ -164,7 +164,7 @@ var Extension;
 		var startDate, endDate, config, filter;
 
 		var filters = _.compact(
-			String(window.location.hash.slice(3)).split('/').splice(2)
+				String(window.location.hash.slice(3)).split('/').splice(2)
 		);
 
 		config = {
@@ -186,8 +186,8 @@ var Extension;
 		if (startDate && endDate)
 		{
 			$('[data-grid-calendar]').val(
-				startDate.format('MM/DD/YYYY') + ' - ' + endDate.format('MM/DD/YYYY')
-				);
+					startDate.format('MM/DD/YYYY') + ' - ' + endDate.format('MM/DD/YYYY')
+			);
 
 			config = {
 				startDate: startDate,
@@ -201,7 +201,7 @@ var Extension;
 			$('input[name="daterangepicker_start"]').trigger('change');
 
 			$('[data-grid-calendar]').val(
-				moment($('input[name="daterangepicker_start"]').val()).format('MM/DD/YYYY') + ' - ' + moment($('input[name="daterangepicker_end"]').val()).format('MM/DD/YYYY')
+					moment($('input[name="daterangepicker_start"]').val()).format('MM/DD/YYYY') + ' - ' + moment($('input[name="daterangepicker_end"]').val()).format('MM/DD/YYYY')
 			);
 		});
 
@@ -215,15 +215,15 @@ var Extension;
 		$('.daterangepicker_end_input').attr('data-grid', 'product');
 
 		$('input[name="daterangepicker_start"]')
-			.attr('data-format', 'MM/DD/YYYY')
-			.attr('data-range-start', '')
-			.attr('data-range-filter', 'created_at')
+				.attr('data-format', 'MM/DD/YYYY')
+				.attr('data-range-start', '')
+				.attr('data-range-filter', 'created_at')
 		;
 
 		$('input[name="daterangepicker_end"]')
-			.attr('data-format', 'MM/DD/YYYY')
-			.attr('data-range-end', '')
-			.attr('data-range-filter', 'created_at')
+				.attr('data-format', 'MM/DD/YYYY')
+				.attr('data-range-end', '')
+				.attr('data-range-filter', 'created_at')
 		;
 
 		return this;
