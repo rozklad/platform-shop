@@ -22,6 +22,43 @@ class CreateProductsTable extends Migration {
 			$table->integer('stock')->default('0');
 			$table->timestamps();
 		});
+
+		$attributesRepo = app('Platform\Attributes\Repositories\AttributeRepositoryInterface');
+
+		$attributes = [
+			[
+				'name' => 'Product title',
+				'type' => 'input',
+				'description' => 'Product title',
+				'slug' => 'product_title',
+			],
+			[
+				'name' => 'Product description',
+				'type' => 'input',
+				'description' => 'Product description',
+				'slug' => 'product_description',
+			],
+			[
+				'name' => 'Product code',
+				'type' => 'input',
+				'description' => 'Product code',
+				'slug' => 'product_code',
+			]
+
+		];
+
+
+		foreach( $attributes as $attribute )
+		{
+			$attributesRepo->firstOrCreate([
+				'namespace'   => Sanatorium\Shop\Models\Product::getEntityNamespace(),
+				'name'        => $attribute['name'],
+				'description' => $attribute['description'],
+				'type'        => $attribute['type'],
+				'slug'        => $attribute['slug'],
+				'enabled'     => 1,
+			]);
+		}
 	}
 
 	/**
