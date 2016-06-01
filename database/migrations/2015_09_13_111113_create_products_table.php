@@ -34,7 +34,7 @@ class CreateProductsTable extends Migration {
 			],
 			[
 				'name' => 'Product description',
-				'type' => 'input',
+				'type' => 'wysiwyg',
 				'description' => 'Product description',
 				'slug' => 'product_description',
 			],
@@ -43,8 +43,13 @@ class CreateProductsTable extends Migration {
 				'type' => 'input',
 				'description' => 'Product code',
 				'slug' => 'product_code',
+			],
+			[
+				'name' => 'Product cover',
+				'type' => 'image',
+				'description' => 'Product cover',
+				'slug' => 'product_cover',
 			]
-
 		];
 
 
