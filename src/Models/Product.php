@@ -17,21 +17,21 @@ use Sanatorium\Stock\Traits\StockTrait;
 
 class Product extends Model implements EntityInterface, TaggableInterface {
 
-	use EntityTrait, 
-		NamespacedEntityTrait, 
-		TaggableTrait, 
-		PriceableTrait, 
-		CategoryTrait, 
-		ManufacturerTrait, 
-		SluggableTrait, 
-		MediableTrait, 
+	use EntityTrait,
+		NamespacedEntityTrait,
+		TaggableTrait,
+		PriceableTrait,
+		CategoryTrait,
+		ManufacturerTrait,
+		SluggableTrait,
+		MediableTrait,
 		//ThumbTrait,
 		StockTrait;
 
 	protected $sluggable = [
-        'build_from' => 'product_title',
-        'save_to'    => 'slug',
-    ];
+		'build_from' => 'product_title',
+		'save_to'    => 'slug',
+	];
 
 	/**
 	 * {@inheritDoc}
@@ -90,26 +90,26 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 
 		list($orderby, $orderway) = explode($delimiter, $order);
 
-		switch( $orderby ) 
+		switch( $orderby )
 		{
 
 			case 'price':
 				return $query->join('priced', 'shop_products.id', '=', 'priced.priceable_id')
-							->join('shop_money', 'priced.money_id', '=', 'shop_money.id')
-							->where('shop_money.currency_id', 1)
-							->select('shop_products.*')
-							->orderBy( \DB::raw('CAST(shop_money.amount AS DECIMAL)'), $orderway);
-			break;
+					->join('shop_money', 'priced.money_id', '=', 'shop_money.id')
+					->where('shop_money.currency_id', 1)
+					->select('shop_products.*')
+					->orderBy( \DB::raw('CAST(shop_money.amount AS DECIMAL)'), $orderway);
+				break;
 
 			case 'name':
 				return $query->join(self::ATTRIBUTE_VALUES_TABLE, 'shop_products.id', '=', self::ATTRIBUTE_VALUES_TABLE . '.entity_id')
-							->join('attributes', 'attributes.id', '=', self::ATTRIBUTE_VALUES_TABLE . '.attribute_id')
-							->where('attributes.slug', '=', 'product_title')
-							->where('attributes.namespace', '=', $this->getEntityNamespace())
-							->groupBy('shop_products.id')
-							->select('shop_products.*')
-							->orderBy(self::ATTRIBUTE_VALUES_TABLE . '.value', $orderway);
-			break;
+					->join('attributes', 'attributes.id', '=', self::ATTRIBUTE_VALUES_TABLE . '.attribute_id')
+					->where('attributes.slug', '=', 'product_title')
+					->where('attributes.namespace', '=', $this->getEntityNamespace())
+					->groupBy('shop_products.id')
+					->select('shop_products.*')
+					->orderBy(self::ATTRIBUTE_VALUES_TABLE . '.value', $orderway);
+				break;
 		}
 	}
 
@@ -117,7 +117,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 	/**
 	 * Search
 	 */
-	
+
 	public function scopeSearch($query, $term = null)
 	{
 		/* Get the search query */
@@ -159,18 +159,18 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			// from all the Products
 			case (count($search) == 0) :
 				return $query;
-			break;
+				break;
 
 			// If one search query was performed, the set
 			// is simply its results
 			case (count($search) == 1) :
 				$intersect = array_values($search)[0];
-			break;
+				break;
 			// If multiple search queries were performed, union
 			// of their found "ids" is the result
 			case (count($search) > 1) :
 				$intersect = call_user_func_array('array_merge', $search);
-			break;
+				break;
 		}
 
 		// No intersect was found
@@ -188,7 +188,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 
 		// Prepare IDs for use in orderBy
 		$ids = implode(',', $stack);
-		
+
 		// Return query with additional WHERE clause containing IN (ids of matching products)
 		return $query->whereIn('id', $stack)
 			->orderByRaw(DB::raw("FIELD(id, $ids)"));
@@ -199,14 +199,14 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		// @todo - make smarter to determine whatever attribute is relational or not
 		if ( strpos($slug, 'product') !== false ) {
 			return DB::table(self::ATTRIBUTE_VALUES_TABLE)
-					->join(self::ATTRIBUTES_TABLE, self::ATTRIBUTE_VALUES_TABLE . '.attribute_id', '=', self::ATTRIBUTES_TABLE . '.id')
-					->where('slug', $slug)->where('value', 'LIKE', '%' . $value . '%')
-					->lists('entity_id');
+				->join(self::ATTRIBUTES_TABLE, self::ATTRIBUTE_VALUES_TABLE . '.attribute_id', '=', self::ATTRIBUTES_TABLE . '.id')
+				->where('slug', $slug)->where('value', 'LIKE', '%' . $value . '%')
+				->lists('entity_id');
 		} else if ( strpos($slug, 'category') !== false ) {
 			$relationships = DB::table(self::ATTRIBUTE_VALUES_TABLE)
-					->join(self::ATTRIBUTES_TABLE, self::ATTRIBUTE_VALUES_TABLE . '.attribute_id', '=', self::ATTRIBUTES_TABLE . '.id')
-					->where('slug', $slug)->where('value', 'LIKE', '%' .  $value . '%')
-					->lists('entity_id');
+				->join(self::ATTRIBUTES_TABLE, self::ATTRIBUTE_VALUES_TABLE . '.attribute_id', '=', self::ATTRIBUTES_TABLE . '.id')
+				->where('slug', $slug)->where('value', 'LIKE', '%' .  $value . '%')
+				->lists('entity_id');
 
 			// If no such results were found, return empty array
 			if ( count($relationships) == 0 ) return [];
@@ -215,9 +215,9 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			})->lists('id')->all();
 		} else {
 			$relationships = DB::table(self::ATTRIBUTE_VALUES_TABLE)
-					->join(self::ATTRIBUTES_TABLE, self::ATTRIBUTE_VALUES_TABLE . '.attribute_id', '=', self::ATTRIBUTES_TABLE . '.id')
-					->where('slug', $slug)->where('value', 'LIKE', '%' .  $value . '%')
-					->lists('entity_id');
+				->join(self::ATTRIBUTES_TABLE, self::ATTRIBUTE_VALUES_TABLE . '.attribute_id', '=', self::ATTRIBUTES_TABLE . '.id')
+				->where('slug', $slug)->where('value', 'LIKE', '%' .  $value . '%')
+				->lists('entity_id');
 
 			// If no such results were found, return empty array
 			if ( count($relationships) == 0 ) return [];
@@ -275,19 +275,19 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			// from all the Products
 			case (count($search) == 0) :
 				return $query;
-			break;
+				break;
 
 			// If one search query was performed, the intersect
 			// is simply its results
 			case (count($search) == 1) :
 				$intersect = array_values($search)[0];
-			break;
+				break;
 
 			// If multiple search queries were performed, intersect
 			// of their found "ids" is the result
 			case (count($search) > 1) :
 				$intersect = call_user_func_array('array_intersect', $search);
-			break;
+				break;
 		}
 
 		// No intersect was found
@@ -304,14 +304,14 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		// @todo - make smarter to determine whatever attribute is relational or not
 		if ( strpos($slug, 'product') !== false ) {
 			return DB::table(self::ATTRIBUTE_VALUES_TABLE)
-					->join(self::ATTRIBUTES_TABLE, self::ATTRIBUTE_VALUES_TABLE . '.attribute_id', '=', self::ATTRIBUTES_TABLE . '.id')
-					->where('slug', $slug)->where('value', $value)
-					->lists('entity_id');
+				->join(self::ATTRIBUTES_TABLE, self::ATTRIBUTE_VALUES_TABLE . '.attribute_id', '=', self::ATTRIBUTES_TABLE . '.id')
+				->where('slug', $slug)->where('value', $value)
+				->lists('entity_id');
 		} else {
 			$relationships = DB::table(self::ATTRIBUTE_VALUES_TABLE)
-					->join(self::ATTRIBUTES_TABLE, self::ATTRIBUTE_VALUES_TABLE . '.attribute_id', '=', self::ATTRIBUTES_TABLE . '.id')
-					->where('slug', $slug)->where('value', $value)
-					->lists('entity_id');
+				->join(self::ATTRIBUTES_TABLE, self::ATTRIBUTE_VALUES_TABLE . '.attribute_id', '=', self::ATTRIBUTES_TABLE . '.id')
+				->where('slug', $slug)->where('value', $value)
+				->lists('entity_id');
 
 			// If no such results were found, return empty array
 			if ( count($relationships) == 0 ) return [];
@@ -338,7 +338,37 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 	public function setCategoriesFromArray($categories = [])
 	{
 
-		// sets categories to object
+		$parent = null;
+
+		foreach ( $categories as $category_name )
+		{
+
+			$category_name = trim($category_name);
+			$category_slug = str_slug($category_name);
+
+			$category = Category::where('slug', $category_slug)->first();
+
+			if ( !$category ) {
+				$category = new Category;
+
+				$normalized_key = 'category_title';
+
+				$category->{$normalized_key} = $category_name;
+
+				if ( $parent ) {
+					$category->parent = $parent->id;
+				}
+
+				$category->slug = $category_slug;
+				$category->save();
+
+			}
+
+			$parent = $category;
+
+			// Attach category
+			$this->categories()->attach($category->id);
+		}
 
 	}
 
