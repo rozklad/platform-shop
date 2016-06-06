@@ -211,7 +211,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			// If no such results were found, return empty array
 			if ( count($relationships) == 0 ) return [];
 			return Product::whereHas('categories', function($q) use ($relationships) {
-				$q->whereIn('shop_categories.id', $relationships);
+				$q->whereIn('categories.id', $relationships);
 			})->lists('id')->all();
 		} else {
 			$relationships = DB::table(self::ATTRIBUTE_VALUES_TABLE)
@@ -222,7 +222,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			// If no such results were found, return empty array
 			if ( count($relationships) == 0 ) return [];
 
-			return Product::whereHas('manufacturer', function($q) use ($relationships) {
+			return Product::whereHas('manufacturers', function($q) use ($relationships) {
 				$q->whereIn('shop_manufacturers.id', $relationships);
 			})->lists('id')->all();
 		}
