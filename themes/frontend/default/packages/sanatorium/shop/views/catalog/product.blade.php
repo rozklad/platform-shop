@@ -1,40 +1,36 @@
-@section('styles')
-@parent
-<style type="text/css">
-.thumb-area {
-	display: inline-block;
-	max-width: 200px;
-	max-height: 200px;
-}
-</style>
-@stop
-
-<div class="col-sm-{{ ($per_page/$cols) }} text-center">	
+<!-- sanatorium/shop::catalog/product -->
+<div class="col-sm-{{ ($cols/$per_row) }} text-center catalog-product">
 
 	<div class="product-block" itemscope itemtype="http://schema.org/Product">
 
-	<h3 class="product-title" itemprop="name">
-		<a href="{{ $product->url }}">	
-			{{ $product->product_title }}
-		</a>
-	</h3>
+		<div class="thumb-area catalog-thumb-area">
 
-	<a href="{{ $product->url }}" class="thumb-area product-image">
+			@if ( $product->hasCoverImage() )
+			<a href="{{ $product->url }}" class="product-catalog-image">
 
-	
-		<img src="{{ $product->coverThumb(200,200) }}" itemprop="image" alt="{{ $product->product_title }}">
+				<img src="{{ $product->coverThumb() }}" itemprop="image" alt="{{ $product->product_title }}">
 
-	</a>
+			</a>
+			@endif
 
-	<div class="price product-common-price product-price-default">
-		Cena bez DPH: {{ $product->price }}
-	</div>
+		</div>
 
-	<div class="price product-common-price product-price-default-vat">
-		Cena s DPH: {{ $product->price_vat }}
-	</div>
+		<h3 class="product-title" itemprop="name">
+			<a href="{{ $product->url }}">
+				{{ $product->product_title }}
+			</a>
+		</h3>
 
-	@hook('catalog.product.bottom', $product)
+		{{-- @todo: move to shoppricing --}}
+		<div class="price product-common-price product-price-default">
+			{{ trans('sanatorium/pricing::general.price.vat') }} {{ $product->price }}
+		</div>
+
+		<div class="price product-common-price product-price-default-vat">
+			{{ trans('sanatorium/pricing::general.price.no_vat') }} {{ $product->price_vat }}
+		</div>
+
+		@hook('catalog.product.bottom', $product)
 
 	</div>
 

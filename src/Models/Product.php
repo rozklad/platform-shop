@@ -322,6 +322,10 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		}
 	}
 
+	public $thumb_object;
+
+	public $thumb_image;
+
 	public function coverThumb()
 	{
 		if ( !$this->product_cover )	// @todo: thumbnail
@@ -329,10 +333,26 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 
 		$medium = app('platform.media')->find($this->product_cover);
 
-		if ( !is_object($medium ) )
+		if ( !is_object($medium) )
 			return null;
 
+		$this->thumb_object = $medium;
+		$this->thumb_image = $medium->thumbnail;
+
 		return url($medium->thumbnail);
+	}
+
+	public function hasCoverImage()
+	{
+		if ( !$this->product_cover )
+			return false;
+
+		$medium = app('platform.media')->find($this->product_cover);
+
+		if ( !is_object($medium) )
+			return false;
+
+		return true;
 	}
 
 	public function setCategoriesFromArray($categories = [])
