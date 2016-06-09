@@ -57,6 +57,11 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 	 */
 	protected static $entityNamespace = 'sanatorium/shop.product';
 
+	public function variants()
+	{
+		return $this->hasMany('Sanatorium\Variants\Models\Variant', 'parent_id');
+	}
+
 	public function getUrlAttribute()
 	{
 		if ( class_exists('\Category') ) {
@@ -345,7 +350,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 
 			return url($medium->thumbnail);
 		} else {
-
+			return route('media.view', $medium->id);
 		}
 	}
 
