@@ -336,10 +336,17 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		if ( !is_object($medium) )
 			return null;
 
-		$this->thumb_object = $medium;
-		$this->thumb_image = $medium->thumbnail;
+		$thumb_contents = @file_get_contents( url($medium->thumbnail) );
 
-		return url($medium->thumbnail);
+		if ( $thumb_contents )
+		{
+			$this->thumb_object = $medium;
+			$this->thumb_image = $medium->thumbnail;
+
+			return url($medium->thumbnail);
+		} else {
+
+		}
 	}
 
 	public function hasCoverImage()
