@@ -1,37 +1,42 @@
+<?php $sizes = ['xs', 'sm', 'md', 'lg']; ?>
+
 <!-- sanatorium/shop::catalog/product -->
-<div class="col-sm-{{ ($cols/$per_row) }} text-center catalog-product">
+<a class="col-sm-{{ ($cols/$per_row) }}
+		@if ( isset($sizes) )
+			@foreach( $sizes as $size )
 
-	<div class="product-block" itemscope itemtype="http://schema.org/Product">
+				<?php $size_name = 'per_row_' . $size; ?>
+				@if ( isset(${$size_name}) )
 
-		<div class="thumb-area catalog-thumb-area">
+					col-{{ $size }}-{{ ($cols/${$size_name}) }}
 
-			@if ( $product->hasCoverImage() )
-			<a href="{{ $product->url }}" class="product-catalog-image">
+				@endif
 
-				<img src="{{ $product->coverThumb() }}" itemprop="image" alt="{{ $product->product_title }}">
+			@endforeach
+		@endif
+		catalog-product product-block" href="{{ $product->url }}" itemscope itemtype="http://schema.org/Product">
 
-			</a>
-			@endif
+	<div class="thumb-area catalog-thumb-area">
 
-		</div>
-
-		<h3 class="product-title" itemprop="name">
-			<a href="{{ $product->url }}">
-				{{ $product->product_title }}
-			</a>
-		</h3>
-
-		{{-- @todo: move to shoppricing --}}
-		<div class="price product-common-price product-price-default">
-			{{ trans('sanatorium/pricing::general.price.vat') }} {{ $product->price }}
-		</div>
-
-		<div class="price product-common-price product-price-default-vat">
-			{{ trans('sanatorium/pricing::general.price.no_vat') }} {{ $product->price_vat }}
-		</div>
-
-		@hook('catalog.product.bottom', $product)
+		@if ( $product->hasCoverImage() )
+			<img src="{{ $product->coverThumb() }}" itemprop="image" alt="{{ $product->product_title }}">
+		@endif
 
 	</div>
 
-</div>
+	<h3 class="product-title" itemprop="name">
+		{{ $product->product_title }}
+	</h3>
+
+	{{-- @todo: move to shoppricing --}}
+	<div class="price product-common-price product-price-default">
+		{{ trans('sanatorium/pricing::general.price.vat') }} {{ $product->price }}
+	</div>
+
+	<div class="price product-common-price product-price-default-vat">
+		{{ trans('sanatorium/pricing::general.price.no_vat') }} {{ $product->price_vat }}
+	</div>
+
+	@hook('catalog.product.bottom', $product)
+
+</a>
