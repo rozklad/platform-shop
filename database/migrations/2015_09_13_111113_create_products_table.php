@@ -49,6 +49,12 @@ class CreateProductsTable extends Migration {
 				'type' => 'image',
 				'description' => 'Product cover',
 				'slug' => 'product_cover',
+			],
+			[
+				'name' => 'Product gallery',
+				'type' => 'gallery',
+				'description' => 'Product gallery',
+				'slug' => 'product_gallery',
 			]
 		];
 

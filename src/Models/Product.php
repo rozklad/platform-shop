@@ -327,31 +327,27 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		}
 	}
 
-	public $thumb_object;
+	protected $cover_attribute = 'product_cover';
 
-	public $thumb_image;
+	public $cover_object;
+
+	public $cover_image;
 
 	public function coverThumb()
 	{
-		if ( !$this->product_cover )	// @todo: thumbnail
+		if ( !$this->{$this->cover_attribute} )	// @todo: thumbnail
 			return null;
 
-		$medium = app('platform.media')->find($this->product_cover);
+		$medium = app('platform.media')->find($this->{$this->cover_attribute});
 
 		if ( !is_object($medium) )
 			return null;
 
-		$thumb_contents = @file_get_contents( url($medium->thumbnail) );
+		$this->cover_object = $medium;
+		$this->cover_image = ($medium->thumbnail) ? $medium->thumbnail : route('media.view', $medium->path);
 
-		if ( $thumb_contents )
-		{
-			$this->thumb_object = $medium;
-			$this->thumb_image = $medium->thumbnail;
+		return $this->cover_image;
 
-			return url($medium->thumbnail);
-		} else {
-			return route('media.view', $medium->id);
-		}
 	}
 
 	public function hasCoverImage()
