@@ -1,5 +1,9 @@
 <?php $sizes = ['xs', 'sm', 'md', 'lg']; ?>
 
+@if ( !isset($per_row) )
+	<?php $per_row = config('sanatorium-shop.per_row'); ?>
+@endif
+
 <!-- sanatorium/shop::catalog/product -->
 <a class="col-sm-{{ ($cols/$per_row) }}
 		@if ( isset($sizes) )

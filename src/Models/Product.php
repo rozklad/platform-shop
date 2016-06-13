@@ -14,6 +14,7 @@ use Sanatorium\Thumbs\Traits\ThumbTrait;
 use Cartalyst\Tags\TaggableTrait;
 use Cartalyst\Tags\TaggableInterface;
 use Sanatorium\Stock\Traits\StockTrait;
+use StorageUrl;
 
 class Product extends Model implements EntityInterface, TaggableInterface {
 
@@ -103,7 +104,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 					->join('shop_money', 'priced.money_id', '=', 'shop_money.id')
 					->where('shop_money.currency_id', 1)
 					->select('shop_products.*')
-					->orderBy( \DB::raw('CAST(shop_money.amount AS DECIMAL)'), $orderway);
+					->orderBy( \DB::raw('CAST('.config('database.connections.mysql.prefix').'shop_money.amount AS DECIMAL)'), $orderway);
 				break;
 
 			case 'name':
@@ -344,7 +345,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			return null;
 
 		$this->cover_object = $medium;
-		$this->cover_image = ($medium->thumbnail) ? $medium->thumbnail : route('media.view', $medium->path);
+		$this->cover_image = StorageUrl::url($medium->path);
 
 		return $this->cover_image;
 
