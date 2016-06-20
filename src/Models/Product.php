@@ -14,7 +14,13 @@ use Sanatorium\Thumbs\Traits\ThumbTrait;
 use Cartalyst\Tags\TaggableTrait;
 use Cartalyst\Tags\TaggableInterface;
 use Sanatorium\Stock\Traits\StockTrait;
+
+// Thumbs dependencies
 use StorageUrl;
+use Platform\Media\Models\Media;
+use Platform\Media\Styles\Style;
+use Storage;
+use Illuminate\Support\Str;
 
 class Product extends Model implements EntityInterface, TaggableInterface {
 
@@ -328,26 +334,178 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		}
 	}
 
+	/**
+	 * Thumbs work
+	 * @var string
+	 */
+
 	protected $cover_attribute = 'product_cover';
+
+	protected $gallery_attribute = 'product_gallery';
 
 	public $cover_object;
 
 	public $cover_image;
 
-	public function coverThumb()
+	public function getGalleryImages($size = 'full')
+	{
+		$images = json_decode($this->{$this->gallery_attribute}, true);
+
+		$output = [];
+
+		foreach( $images as $media_id ) {
+
+			$media = app('platform.media')->find($media_id);
+
+			$output[] = self::getSizeUrl($media, $size, $size);
+
+		}
+
+		return $output;
+	}
+
+	public function getGalleryImageIds()
+	{
+		return json_decode($this->{$this->gallery_attribute}, true);
+	}
+
+	public function coverThumb($size = 'full')
 	{
 		if ( !$this->{$this->cover_attribute} )	// @todo: thumbnail
 			return null;
 
-		$medium = app('platform.media')->find($this->{$this->cover_attribute});
+		$medium = $this->getCoverObject();
 
 		if ( !is_object($medium) )
 			return null;
 
 		$this->cover_object = $medium;
-		$this->cover_image = StorageUrl::url($medium->path);
+		$this->cover_image = StorageUrl::url( self::getSizeUrl($medium, $size) );
 
 		return $this->cover_image;
+
+	}
+
+	public function getCoverObject()
+	{
+		return $this->getMediaObject($this->{$this->cover_attribute});
+	}
+
+	public function getMediaObject($media_id = 0)
+	{
+		return app('platform.media')->find($media_id);
+	}
+
+	/**
+	 * @todo move to thumbs package
+	 * @param $path
+	 * @param $size
+	 */
+	public static function getSizeUrl($media, $size)
+	{
+		switch ( $size )
+		{
+			// Sanatorium/Thumbs thumb macro
+			default:
+				return self::thumbnailPath($media, $size, $size);
+				break;
+		}
+
+	}
+
+	public function regenerateThumbnail(Media $media)
+	{
+		if ( !$this->styles )
+			$this->styles = app('platform.media.manager');
+
+		if ( !$this->intervention )
+			$this->intervention = app('image');
+
+		$original = $this->coverThumb('full');
+
+		// Loop through all the registered styles
+		foreach ($this->styles->getStyles() as $name => $style) {
+			// Initialize the style
+			call_user_func($style, $style = new Style($name));
+
+			// Check if the uploaded file mime type is valid
+			if ($style->mimes && ! in_array($media->mime, $style->mimes)) {
+				continue;
+			}
+
+			$path = $media->path;
+
+			if ( empty($original) ) return false;
+
+			$contents = @file_get_contents($original);
+
+			if ( empty($contents) ) return false;
+
+			// Create the thumbnail
+			$image = $this->intervention->make($contents);
+
+			if ( $style->width )
+			{
+				$image->resize(null, $style->width, function ($constraint)
+				{
+					$constraint->aspectRatio();
+					$constraint->upsize();
+				});
+			}
+
+			$image->encode( \Sanatorium\Thumbs\Styles\Macros\ThumbsMacro::getExtension($media) );
+
+			Storage::disk('s3')->put(
+				str_replace(public_path(), null, $this->getUploadPath($media, $style)),
+				$image->getEncoded()
+			);
+
+		}
+
+	}
+
+	public function getUploadPath($media, $style)
+	{
+		$width = $style->width;
+		$height = $style->height;
+
+		$name = Str::slug(implode('-', [ $width, $height ?: $width ]));
+
+		$extension = \Sanatorium\Thumbs\Styles\Macros\ThumbsMacro::getExtension($media);
+
+		return "{$style->path}/{$media->id}_{$name}.{$extension}";
+	}
+
+	/**
+	 * @todo: derive base path froms tyle
+	 * @param     $media
+	 * @param int $width
+	 * @param int $height
+	 * @return mixed|string
+	 */
+	public static function thumbnailPath($media, $width = 300, $height = 300)
+	{
+		$name = '';
+
+		if ( $width != 'full' || $height != 'full')
+			$name = Str::slug(implode('-', [ $width, $height ?: $width ]));
+
+		$extension = \Sanatorium\Thumbs\Styles\Macros\ThumbsMacro::getExtension($media);
+
+		return "cache/thumbs/{$media->id}_{$name}.{$extension}";
+	}
+
+
+	public function regenerateThumbnails()
+	{
+		$images = [
+			$this->getCoverObject()
+		];
+
+		foreach( $images as $media )
+		{
+			$this->regenerateThumbnail($media);
+		}
 
 	}
 

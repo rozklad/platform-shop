@@ -4,26 +4,28 @@
 	<?php $per_row = config('sanatorium-shop.per_row'); ?>
 @endif
 
+@if ( !isset($cols) )
+	<?php $cols_total = config('sanatorium-shop.cols'); ?>
+@endif
+
 <!-- sanatorium/shop::catalog/product -->
-<a class="col-sm-{{ ($cols/$per_row) }}
-		@if ( isset($sizes) )
-			@foreach( $sizes as $size )
+<a class="col-sm-{{ ($cols_total/$per_row['default']) }}
+		@foreach( $per_row as $size => $cols )
 
-				<?php $size_name = 'per_row_' . $size; ?>
-				@if ( isset(${$size_name}) )
+			@if ( isset($cols) )
 
-					col-{{ $size }}-{{ ($cols/${$size_name}) }}
+				col-{{ $size }}-{{ ($cols_total/$cols) }}
 
-				@endif
+			@endif
 
-			@endforeach
-		@endif
+		@endforeach
 		catalog-product product-block" href="{{ $product->url }}" itemscope itemtype="http://schema.org/Product">
 
 	<div class="thumb-area catalog-thumb-area">
-
+		
+		{{-- Thumb picture coverThumb() accepts styles registered in platform-media.styles configuration (150|300|600 by default) --}}
 		@if ( $product->hasCoverImage() )
-			<img src="{{ $product->coverThumb() }}" itemprop="image" alt="{{ $product->product_title }}">
+			<img src="{{ $product->coverThumb(300) }}" itemprop="image" alt="{{ $product->product_title }}">
 		@endif
 
 	</div>

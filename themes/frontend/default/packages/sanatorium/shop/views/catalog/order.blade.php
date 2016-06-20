@@ -30,51 +30,53 @@ $orders = [
 	'price:asc' => 'Od nejlevnějšího',
 	'price:desc' => 'Od nejdražšího',
 ];
+
+$default_per_page = config('sanatorium-shop.per_page');
+
+// Value => Label
 $per_pages = [
-	12 => 12,
-	24 => 24,
-	48 => 48
+	$default_per_page => $default_per_page,
+	$default_per_page*2 => $default_per_page*2,
+	$default_per_page*3 => $default_per_page*3
 ];
 ?>
 
-<div class="navbar navbar-default catalog-navigation">
-	<div class="container-fluid">
-		<form class="navbar-form navbar-left" action="{{ strtok($_SERVER['REQUEST_URI'], '?') }}" role="search" method="GET">
-			<div class="form-group">
-				<label class="control-label" for="order_choose">
-					{{ trans('pagination.order.label') }}
-				</label>
-				<select name="order" class="form-control" id="order_choose">
-					@foreach($orders as $key => $name)
-					<option value="{{ $key }}" {{ Input::get('order') == $key ? 'selected' : null }}>{{ $name }}</option>
-					@endforeach
-				</select>
-
-				{{-- Transfer other query params --}}
-				@foreach(request()->except(['order']) as $key => $value)
-					<input type="hidden" name="{{ $key }}" value="{{ $value }}">
+<div class="navbar catalog-navigation">
+	<form class="navbar-form navbar-left" action="{{ strtok($_SERVER['REQUEST_URI'], '?') }}" role="search" method="GET">
+		<div class="form-group">
+			<label class="control-label" for="order_choose">
+				{{ trans('pagination.order.label') }}
+			</label>
+			<select name="order" class="form-control" id="order_choose">
+				@foreach($orders as $key => $name)
+				<option value="{{ $key }}" {{ Input::get('order') == $key ? 'selected' : null }}>{{ $name }}</option>
 				@endforeach
-			</div>
-		</form>
+			</select>
 
-		<form class="navbar-form navbar-left" action="{{ strtok($_SERVER['REQUEST_URI'], '?') }}" role="search" method="GET">
-			<div class="form-group">
-				<label class="control-label" for="per_page_choose">
-					{{ trans('pagination.per_page.label') }}
-				</label>
-				<select name="per_page" class="form-control" id="per_page_choose">
-					@foreach($per_pages as $key => $name)
-					<option value="{{ $key }}" {{ Input::get('per_page') == $key ? 'selected' : null }}>{{ $name }}</option>
-					@endforeach
-				</select>
+			{{-- Transfer other query params --}}
+			@foreach(request()->except(['order']) as $key => $value)
+				<input type="hidden" name="{{ $key }}" value="{{ $value }}">
+			@endforeach
+		</div>
+	</form>
 
-				{{-- Transfer other query params --}}
-				@foreach(request()->except(['per_page']) as $key => $value)
-					<input type="hidden" name="{{ $key }}" value="{{ $value }}">
+	<form class="navbar-form navbar-left" action="{{ strtok($_SERVER['REQUEST_URI'], '?') }}" role="search" method="GET">
+		<div class="form-group">
+			<label class="control-label" for="per_page_choose">
+				{{ trans('pagination.per_page.label') }}
+			</label>
+			<select name="per_page" class="form-control" id="per_page_choose">
+				@foreach($per_pages as $key => $name)
+				<option value="{{ $key }}" {{ Input::get('per_page') == $key ? 'selected' : null }}>{{ $name }}</option>
 				@endforeach
-			</div>
-		</form>
+			</select>
 
-		@include('sanatorium/shop::catalog/pagination', ['paginator' => $products, 'class' => 'navbar-nav navbar-right'])
-	</div>
+			{{-- Transfer other query params --}}
+			@foreach(request()->except(['per_page']) as $key => $value)
+				<input type="hidden" name="{{ $key }}" value="{{ $value }}">
+			@endforeach
+		</div>
+	</form>
+
+	@include('sanatorium/shop::catalog/pagination', ['paginator' => $products, 'class' => 'navbar-nav navbar-right'])
 </div>
