@@ -22,7 +22,7 @@
 		catalog-product product-block" href="{{ $product->url }}" itemscope itemtype="http://schema.org/Product">
 
 	<div class="thumb-area catalog-thumb-area">
-		
+
 		{{-- Thumb picture coverThumb() accepts styles registered in platform-media.styles configuration (150|300|600 by default) --}}
 		@if ( $product->hasCoverImage() )
 			<img src="{{ $product->coverThumb(300) }}" itemprop="image" alt="{{ $product->product_title }}">

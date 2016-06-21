@@ -26,14 +26,18 @@
 
 {{-- Meta general --}}
 @section('meta-general')
-<meta property="og:title" content="{{ $product->product_title }}" />
-<meta property="og:description" content="{{ strip_tags($product->product_description) }}" />
-<meta property="og:type" content="product" />
-{{-- this returns old url --}}
-{{-- <meta property="og:url" content="{{ route('sanatorium.shop.products.view', [$product->slug]) }}" /> --}}
-@if ( $product->has_cover_image )
-<meta property="og:image" content="{{ $product->coverimage['url'] }}" />
-@endif
+	{{-- OG tags --}}
+	<meta property="og:title" content="{{ $product->product_title }}" />
+	<meta property="og:description" content="{{ strip_tags($product->product_description) }}" />
+	<meta property="og:type" content="product" />
+	<meta property="og:url" content="{{ $product->url }}" />
+	@if ( $product->hasCoverImage() )
+		<meta property="og:image" content="{{ $product->coverThumb('full') }}" />
+	@endif
+
+	{{-- Cannonical --}}
+	<link rel="canonical" href="{{ $product->url }}" />
+
 @stop
 
 
@@ -128,11 +132,9 @@ jQuery(document).ready(function($) {
 		}
 
 		$.iLightBox([
-		@foreach($product->mediaByTag('gallery') as $media)
-			@if ( $media->is_image )
-			{ url: '{{ $media->url }}', title: '{{ $product->product_title }}' },
-			@endif
-		@endforeach
+			@foreach($product->getGalleryImages() as $thumb => $image)
+				{ url: '{{ $image }}', title: '{{ $product->product_title }}' },
+			@endforeach
 		], config);
 	});
 
@@ -143,36 +145,34 @@ jQuery(document).ready(function($) {
 
 @section('page')
 
-<div class="container show-product" itemscope itemtype="http://schema.org/Product">
-	<div class="row">
-		<ol class="breadcrumb">
-			<li><a href="{{ URL::to('/') }}">{{ config('platform.app.title') }}</a></li>
-			@foreach( $product->categories as $category )
-				<li><a href="{{ $category->url }}">{{ $category->category_title }}</a></li>
-			@endforeach
-		</ol>
-	</div>
+<div class="show-product" itemscope itemtype="http://schema.org/Product">
+
+	<ol class="breadcrumb">
+		<li><a href="{{ URL::to('/') }}">{{ config('platform.app.title') }}</a></li>
+		@foreach( $product->categories as $category )
+			<li><a href="{{ $category->url }}">{{ $category->category_title }}</a></li>
+		@endforeach
+	</ol>
+
 	<h1 itemprop="name" class="product-title">{{{ $product->product_title }}}</h1>
+
 	<div class="row">
 		<div class="col-sm-6 image-area">
 			{{-- Primary image --}}
 			<div class="primary-image text-center">
-				@if ( $product->has_cover_image )
-				<a href="{{ $product->coverThumb(300,300) }}" class="lightbox" data-title="{{ $product->product_title }} - Ukázkový obrázek" data-gallery="product_images" title="{{ trans('sanatorium/shop::products.click_for_preview', ['title' => $product->product_title]) }}">
-					<img src="{{ $product->coverThumb(300,300) }}" alt="{{ $product->product_title }} - Ukázkový obrázek">
+				@if ( $product->hasCoverImage() )
+				<a href="{{ $product->coverThumb() }}" class="lightbox" data-title="{{ $product->product_title }} - Ukázkový obrázek" data-gallery="product_images" title="{{ trans('sanatorium/shop::products.click_for_preview', ['title' => $product->product_title]) }}">
+					<img src="{{ $product->coverThumb(300) }}" alt="{{ $product->product_title }} - Ukázkový obrázek">
 				</a>
 				@endif
 			</div>
 
 			{{-- Invisible gallery --}}
 			<div class="gallery-area">
-				<?php $i = 1; ?>
-				@foreach($product->mediaByTag('gallery') as $media)
-					@if ($media != $product->cover_image && $media->is_image)
-						<a href="{{ $media->url }}" class="lightbox" data-title="{{ $product->product_title }} - {{ $i }}" data-gallery="product_images">	<img src="{{ $media->url }}" alt="{{ $product->product_title }} - {{ $i }}">
-						</a>
-						<?php $i++; ?>
-					@endif
+				@foreach($product->getGalleryImages() as $thumb => $image)
+					<a href="{{ $image }}" class="lightbox" data-title="{{ $product->product_title }}" data-gallery="product_images">
+						<img src="{{ $thumb }}" alt="{{ $product->product_title }}">
+					</a>
 				@endforeach
 			</div>
 		</div>
@@ -256,6 +256,8 @@ jQuery(document).ready(function($) {
 
 		</div>
 	</div>
+
+	{{-- Tabs --}}
 	<div class="row">
 		<div class="col-sm-12">
 			<div class="tab-panel">

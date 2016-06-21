@@ -73,7 +73,13 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 	{
 		if ( class_exists('\Category') ) {
 			// Categories are installed, return better optimized SEO url
-			return route('sanatorium.categories.product.view', $this->slug);
+
+			$base = '';
+			foreach ($this->categories as $category) {
+				$base .= $category->slug . '/';
+			}
+
+			return url($base . $this->slug);
 		}
 
 		return route('sanatorium.shop.products.view', $this->slug);
@@ -347,9 +353,9 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 
 	public $cover_image;
 
-	public function getGalleryImages($size = 'full')
+	public function getGalleryImages($size = 'full', $thumbsize = 150)
 	{
-		$images = json_decode($this->{$this->gallery_attribute}, true);
+		$images = $this->{$this->gallery_attribute};
 
 		$output = [];
 
@@ -357,7 +363,31 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 
 			$media = app('platform.media')->find($media_id);
 
-			$output[] = self::getSizeUrl($media, $size, $size);
+			$thumb = StorageUrl::url(self::getSizeUrl($media, $thumbsize, $thumbsize));
+
+			$full = StorageUrl::url( self::getSizeUrl($media, $size, $size) );
+
+			$output[$thumb] = $full;
+
+		}
+
+		return $output;
+	}
+
+	public function getGalleryImageObjects()
+	{
+		$ids = $this->getGalleryImageIds();
+
+		$output = [];
+
+		if ( is_array($ids) )
+		{
+
+			foreach ( $ids as $media_id )
+			{
+
+				$output[ $media_id ] = app('platform.media')->find($media_id);
+			}
 
 		}
 
@@ -366,7 +396,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 
 	public function getGalleryImageIds()
 	{
-		return json_decode($this->{$this->gallery_attribute}, true);
+		return $this->{$this->gallery_attribute};
 	}
 
 	public function coverThumb($size = 'full')
@@ -421,7 +451,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		if ( !$this->intervention )
 			$this->intervention = app('image');
 
-		$original = $this->coverThumb('full');
+		$original = StorageUrl::url( $media->path );
 
 		// Loop through all the registered styles
 		foreach ($this->styles->getStyles() as $name => $style) {
@@ -502,9 +532,12 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			$this->getCoverObject()
 		];
 
+		$images = array_merge($images, $this->getGalleryImageObjects());
+
 		foreach( $images as $media )
 		{
-			$this->regenerateThumbnail($media);
+			if ( !is_null($media) )
+				$this->regenerateThumbnail($media);
 		}
 
 	}

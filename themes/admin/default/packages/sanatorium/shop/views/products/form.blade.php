@@ -119,7 +119,17 @@
 
 								<div class="col-sm-6">
 
-									@attributes($product, ['product_cover'])
+									<div class="attributes-inline">
+
+										@attributes($product, ['product_cover'])
+
+									</div>
+
+									<div class="attributes-inline">
+
+										@attributes($product, ['product_gallery'])
+
+									</div>
 
 								</div>
 
