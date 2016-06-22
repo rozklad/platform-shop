@@ -566,10 +566,10 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			$category_name = trim($category_name);
 			$category_slug = str_slug($category_name);
 
-			$category = Category::where('slug', $category_slug)->first();
+			$category = \Category::where('slug', $category_slug)->first();
 
 			if ( !$category ) {
-				$category = new Category;
+				$category = new \Category;
 
 				$normalized_key = 'category_title';
 
