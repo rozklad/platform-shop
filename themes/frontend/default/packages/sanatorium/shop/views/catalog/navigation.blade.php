@@ -12,7 +12,7 @@
 </style>
 @stop
 
-<div class="navbar navbar-default catalog-navigation">
+<div class="navbar catalog-navigation">
 	<div class="container-fluid">
 		<div class="navbar-left navbar-text pagination-text">
 			{!! trans('sanatorium/shop::catalog/pagination.info', [

@@ -25,10 +25,10 @@ $(function(){
 
 <?php
 $orders = [
-	'name:asc' => 'Podle abecedy A-Z',
-	'name:desc' => 'Podle abecedy Z-A',
-	'price:asc' => 'Od nejlevnějšího',
-	'price:desc' => 'Od nejdražšího',
+		'name:asc' => trans('sanatorium/shop::general.sort.name:asc'),
+		'name:desc' => trans('sanatorium/shop::general.sort.name:desc'),
+		'price:asc' => trans('sanatorium/shop::general.sort.price:asc'),
+		'price:desc' => trans('sanatorium/shop::general.sort.price:desc'),
 ];
 
 $default_per_page = config('sanatorium-shop.per_page');
