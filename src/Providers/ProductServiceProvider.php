@@ -24,6 +24,8 @@ class ProductServiceProvider extends ServiceProvider {
         $this->registerCviebrockEloquentSluggablePackage();
 
         $this->prepareResources();
+
+		$this->registerHooks();
         
         //$this->registerIlluminateHtml();
 	}
@@ -86,6 +88,28 @@ class ProductServiceProvider extends ServiceProvider {
 			$this->app->register($serviceProvider);
 			AliasLoader::getInstance()->alias('Form', 'Illuminate\Html\FormFacade');
 			AliasLoader::getInstance()->alias('HTML', 'Illuminate\Html\HtmlFacade');
+		}
+	}
+
+	/**
+	 * Register all hooks.
+	 *
+	 * @return void
+	 */
+	protected function registerHooks()
+	{
+		$hooks = [
+			[
+				'position' => 'search.results',
+				'hook' => 'sanatorium/shop::hooks.search',
+			],
+		];
+
+		$manager = $this->app['sanatorium.hooks.manager'];
+
+		foreach ($hooks as $item) {
+			extract($item);
+			$manager->registerHook($position, $hook);
 		}
 	}
 }
