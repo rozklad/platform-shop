@@ -75,6 +75,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			// Categories are installed, return better optimized SEO url
 
 			$base = '';
+
 			foreach ($this->categories as $category) {
 				$base .= $category->slug . '/';
 			}
@@ -241,7 +242,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			if ( count($relationships) == 0 ) return [];
 
 			return Product::whereHas('manufacturers', function($q) use ($relationships) {
-				$q->whereIn('shop_manufacturers.id', $relationships);
+				$q->whereIn('manufacturers.id', $relationships);
 			})->lists('id')->all();
 		}
 	}
@@ -566,7 +567,13 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			$category_name = trim($category_name);
 			$category_slug = str_slug($category_name);
 
-			$category = \Category::where('slug', $category_slug)->first();
+			$category = \Category::where('slug', $category_slug);
+
+			if ( !is_null($parent) ) {
+				$category = $category->where('parent', $category->id);
+			}
+
+			$category = $category->first();
 
 			if ( !$category ) {
 				$category = new \Category;
