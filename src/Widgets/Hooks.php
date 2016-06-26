@@ -4,7 +4,7 @@ use Product;
 
 class Hooks {
 
-    public function search()
+    public function search($term = null)
     {
 
         if ( !isset($per_page) ) {
@@ -17,7 +17,7 @@ class Hooks {
             ->orderBy('id', 'DESC')
             ->get();
 
-        return view('sanatorium/shop::widgets/search', compact('products', 'per_page'));
+        return view('sanatorium/shop::widgets/search', compact('products', 'per_page', 'term'));
     }
 
 }

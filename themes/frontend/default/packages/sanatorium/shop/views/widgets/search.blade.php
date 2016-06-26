@@ -1,4 +1,9 @@
 
 
 {{-- Products search results --}}
-@include('sanatorium/shop::catalog/row')
+
+@if ( $products )
+    @include('sanatorium/shop::catalog/row')
+@else
+    {{ trans('sanatorium/search::general.no_search_results', ['term' => $term]) }}
+@endif
