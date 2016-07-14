@@ -132,9 +132,11 @@ jQuery(document).ready(function($) {
 		}
 
 		$.iLightBox([
-			@foreach($product->getGalleryImages() as $thumb => $image)
-				{ url: '{{ $image }}', title: '{{ $product->product_title }}' },
-			@endforeach
+			@if ( is_array($product->getGalleryImages()) )
+				@foreach($product->getGalleryImages() as $thumb => $image)
+					{ url: '{{ $image }}', title: '{{ $product->product_title }}' },
+				@endforeach
+			@endif
 		], config);
 	});
 
@@ -169,11 +171,13 @@ jQuery(document).ready(function($) {
 
 			{{-- Invisible gallery --}}
 			<div class="gallery-area">
-				@foreach($product->getGalleryImages() as $thumb => $image)
-					<a href="{{ $image }}" class="lightbox" data-title="{{ $product->product_title }}" data-gallery="product_images">
-						<img src="{{ $thumb }}" alt="{{ $product->product_title }}">
-					</a>
-				@endforeach
+				@if ( is_array($product->getGalleryImages()) )
+					@foreach($product->getGalleryImages() as $thumb => $image)
+						<a href="{{ $image }}" class="lightbox" data-title="{{ $product->product_title }}" data-gallery="product_images">
+							<img src="{{ $thumb }}" alt="{{ $product->product_title }}">
+						</a>
+					@endforeach
+				@endif
 			</div>
 		</div>
 		<div class="col-sm-6 product-info">
