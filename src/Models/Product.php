@@ -360,17 +360,23 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 
 		$output = [];
 
-		foreach( $images as $media_id ) {
+        if ( is_array($images) )
+        {
 
-			$media = app('platform.media')->find($media_id);
+            foreach ( $images as $media_id )
+            {
 
-			$thumb = StorageUrl::url(self::getSizeUrl($media, $thumbsize, $thumbsize));
+                $media = app('platform.media')->find($media_id);
 
-			$full = StorageUrl::url( self::getSizeUrl($media, $size, $size) );
+                $thumb = StorageUrl::url(self::getSizeUrl($media, $thumbsize, $thumbsize));
 
-			$output[$thumb] = $full;
+                $full = StorageUrl::url(self::getSizeUrl($media, $size, $size));
 
-		}
+                $output[ $thumb ] = $full;
+
+            }
+
+        }
 
 		return $output;
 	}
