@@ -21,6 +21,7 @@ use Platform\Media\Models\Media;
 use Platform\Media\Styles\Style;
 use Storage;
 use Illuminate\Support\Str;
+use Sanatorium\Inputs\Traits\ThumbableTrait;
 
 class Product extends Model implements EntityInterface, TaggableInterface {
 
@@ -33,7 +34,8 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		SluggableTrait,
 		MediableTrait,
 		//ThumbTrait,
-		StockTrait;
+		StockTrait,
+        ThumbableTrait;
 
 	protected $sluggable = [
 		'build_from' => 'product_title',
@@ -512,26 +514,6 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 
 		return "{$style->path}/{$media->id}_{$name}.{$extension}";
 	}
-
-	/**
-	 * @todo: derive base path froms tyle
-	 * @param     $media
-	 * @param int $width
-	 * @param int $height
-	 * @return mixed|string
-	 */
-	public static function thumbnailPath($media, $width = 300, $height = 300)
-	{
-		$name = '';
-
-		if ( $width != 'full' || $height != 'full')
-			$name = Str::slug(implode('-', [ $width, $height ?: $width ]));
-
-		$extension = \Sanatorium\Thumbs\Styles\Macros\ThumbsMacro::getExtension($media);
-
-		return "cache/thumbs/{$media->id}_{$name}.{$extension}";
-	}
-
 
 	public function regenerateThumbnails()
 	{
