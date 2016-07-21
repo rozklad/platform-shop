@@ -118,6 +118,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 				return $query->join('priced', 'shop_products.id', '=', 'priced.priceable_id')
 					->join('shop_money', 'priced.money_id', '=', 'shop_money.id')
 					->where('shop_money.currency_id', 1)
+                    ->groupBy('shop_products.id')
 					->select('shop_products.*')
 					->orderBy( \DB::raw('CAST('.config('database.connections.mysql.prefix').'shop_money.amount AS DECIMAL)'), $orderway);
 				break;
