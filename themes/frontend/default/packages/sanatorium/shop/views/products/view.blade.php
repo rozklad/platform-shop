@@ -188,14 +188,26 @@ jQuery(document).ready(function($) {
 			</div>
 			<table class="table product-info-table">
 				<tbody>
+				@if ( $product->ean )
 				<tr>
 					<th>
-						EAN
+						{{ trans('sanatorium/shop::products/model.general.ean') }}
 					</th>
 					<td>
-						{{ $product->code }}
+						{{ $product->ean }}
 					</td>
 				</tr>
+				@endif
+				@if ( $product->code )
+					<tr>
+						<th>
+							{{ trans('sanatorium/shop::products/model.general.code') }}
+						</th>
+						<td>
+							{{ $product->code }}
+						</td>
+					</tr>
+				@endif
 				@if (is_object($product->manufacturer))
 				<tr>
 					<th>
@@ -215,7 +227,7 @@ jQuery(document).ready(function($) {
 				</tr>
 				<tr>
 					<th>
-						Cena s DPH
+						{{ trans('sanatorium/pricing::general.price.vat') }}
 					</th>
 					<td>
 						{{ $product->price_vat }}
@@ -223,7 +235,7 @@ jQuery(document).ready(function($) {
 				</tr>
 				<tr>
 					<th>
-						Cena bez DPH
+						{{ trans('sanatorium/pricing::general.price.no_vat') }}
 					</th>
 					<td>
 						{{ $product->price }}

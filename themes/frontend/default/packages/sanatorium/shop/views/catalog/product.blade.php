@@ -36,11 +36,11 @@
 
 	{{-- @todo: move to shoppricing --}}
 	<div class="price product-common-price product-price-default">
-		{{ trans('sanatorium/pricing::general.price.vat') }} {{ $product->price }}
+		{{ trans('sanatorium/pricing::general.price.no_vat') }} {{ $product->price }}
 	</div>
 
 	<div class="price product-common-price product-price-default-vat">
-		{{ trans('sanatorium/pricing::general.price.no_vat') }} {{ $product->price_vat }}
+		{{ trans('sanatorium/pricing::general.price.vat') }} {{ $product->price_vat }}
 	</div>
 
 	@hook('catalog.product.bottom', $product)
