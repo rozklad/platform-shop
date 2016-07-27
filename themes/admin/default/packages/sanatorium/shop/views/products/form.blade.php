@@ -96,9 +96,7 @@
 				{{-- Form: Tabs --}}
 				<ul class="nav nav-tabs" role="tablist">
 					<li class="active" role="presentation"><a href="#general-tab" aria-controls="general-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.general') }}}</a></li>
-					{{--
-					<li role="presentation"><a href="#attributes-tab" aria-controls="attributes-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.attributes') }}}</a></li>--}}
-					
+					<li role="presentation"><a href="#attributes-tab" aria-controls="attributes-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.attributes') }}}</a></li>
 					<li role="presentation"><a href="#pricing-tab" aria-controls="pricing-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.pricing') }}}</a></li>
 					<li role="presentation"><a href="#tags-tab" aria-controls="tags-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.tags') }}}</a></li>
 					<li role="presentation"><a href="#urls-tab" aria-controls="urls-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.urls') }}}</a></li>
@@ -250,17 +248,20 @@
 						</fieldset>
 
 					</div>
-					
-					<?php /*
-					<div class="tab-pane fade" id="urls-tab">
+
+					<div class="tab-pane fade" id="attributes-tab">
 						
 						<div class="attributes-inline">
 
-							@attributes($product, ['product_urls'])
+							@attributesnot($product, ['product_cover',
+							'product_gallery',
+							'product_title',
+							'product_description',
+							'video'])
 
 						</div>
 
-					</div>*/?>
+					</div>
 
 					<div class="tab-pane fade" id="attachments-tab">
 						
