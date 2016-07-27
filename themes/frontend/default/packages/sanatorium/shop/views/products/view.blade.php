@@ -220,6 +220,16 @@ jQuery(document).ready(function($) {
 					</td>
 				</tr>
 				@endif
+				@if ($product->zeme_puvodu)
+				<tr>
+					<th>
+						Země původu
+					</th>
+					<td>
+						{{ $product->zeme_puvodu }}
+					</td>
+				</tr>
+				@endif
 				<tr>
 					<th colspan="2" class="blank">
 
