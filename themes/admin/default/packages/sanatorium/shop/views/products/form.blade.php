@@ -99,11 +99,8 @@
 					<li role="presentation"><a href="#attributes-tab" aria-controls="attributes-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.attributes') }}}</a></li>
 					<li role="presentation"><a href="#pricing-tab" aria-controls="pricing-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.pricing') }}}</a></li>
 					<li role="presentation"><a href="#tags-tab" aria-controls="tags-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.tags') }}}</a></li>
-					<li role="presentation"><a href="#urls-tab" aria-controls="urls-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.urls') }}}</a></li>
-					<li role="presentation"><a href="#attachments-tab" aria-controls="attachments-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.attachments') }}}</a></li>
 					<li role="presentation"><a href="#categories-tab" aria-controls="categories-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.categories') }}}</a></li>
 					<li role="presentation"><a href="#manufacturers-tab" aria-controls="manufacturers-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.manufacturers') }}}</a></li>
-					<li role="presentation"><a href="#before_after-tab" aria-controls="before_after-tab" role="tab" data-toggle="tab">Before / After</a></li>
 				</ul>
 
 				<div class="tab-content">
@@ -225,11 +222,19 @@
 					</div>
 
 					{{-- Tab: Attributes --}}
-					{{-- 
-					<div role="tabpanel" class="tab-pane fade" id="attributes-tab">
-						@attributes($product)
+					<div class="tab-pane fade" id="attributes-tab">
+
+						<div class="attributes-inline">
+
+							@attributesnot($product, ['product_cover',
+							'product_gallery',
+							'product_title',
+							'product_description',
+							'video'])
+
+						</div>
+
 					</div>
-					--}}
 
 					{{-- Tab: Pricing --}}
 					<div role="tabpanel" class="tab-pane fade" id="pricing-tab">
@@ -249,30 +254,7 @@
 
 					</div>
 
-					<div class="tab-pane fade" id="attributes-tab">
-						
-						<div class="attributes-inline">
-
-							@attributesnot($product, ['product_cover',
-							'product_gallery',
-							'product_title',
-							'product_description',
-							'video'])
-
-						</div>
-
-					</div>
-
-					<div class="tab-pane fade" id="attachments-tab">
-						
-						<div class="attributes-inline">
-
-							@attributes($product, ['attachments'])
-
-						</div>
-
-					</div>
-
+					{{-- Tab: Categories --}}
 					<div class="tab-pane fade" id="categories-tab">
 						
 						<div class="attributes-inline">
@@ -288,16 +270,6 @@
 						<div class="attributes-inline">
 
 							@manufacturers($product)
-
-						</div>
-
-					</div>
-
-					<div class="tab-pane fade" id="before_after-tab">
-						
-						<div class="attributes-inline">
-
-							@attributes($product, ['before_image', 'after_image'])
 
 						</div>
 
