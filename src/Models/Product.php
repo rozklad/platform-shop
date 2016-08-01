@@ -545,47 +545,43 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		return true;
 	}
 
-	public function setCategoriesFromArray($categories = [])
-	{
+    public function setCategoriesFromArray($categories = [])
+    {
 
-		$parent = null;
+        $parent = null;
 
-		foreach ( $categories as $category_name )
-		{
+        $categoriesrepo = app('sanatorium.categories.category');
 
-			$category_name = trim($category_name);
-			$category_slug = str_slug($category_name);
+        foreach ( $categories as $category_name )
+        {
 
-			$category = \Category::where('slug', $category_slug);
+            $category_name = trim($category_name);
+            $category_slug = str_slug($category_name);
 
-			if ( !is_null($parent) ) {
-				$category = $category->where('parent', $category->id);
-			}
+            $category = $categoriesrepo->where('slug', $category_slug)->first();
 
-			$category = $category->first();
+            if ( !$category ) {
 
-			if ( !$category ) {
-				$category = new \Category;
+                if ( is_object($parent) ) {
+                    $parent_id = $parent->id;
+                } else {
+                    $parent_id = 0;
+                }
 
-				$normalized_key = 'category_title';
+                list($messages, $category) = $categoriesrepo->create([
+                    'category_title' => $category_name,
+                    'parent' => $parent_id,
+                    'slug' => $category_slug
+                ]);
 
-				$category->{$normalized_key} = $category_name;
+            }
 
-				if ( $parent ) {
-					$category->parent = $parent->id;
-				}
+            $parent = $category;
 
-				$category->slug = $category_slug;
-				$category->save();
+            // Attach category
+            $this->categories()->attach($category->id);
+        }
 
-			}
-
-			$parent = $category;
-
-			// Attach category
-			$this->categories()->attach($category->id);
-		}
-
-	}
+    }
 
 }
