@@ -558,7 +558,12 @@ class Product extends Model implements EntityInterface, TaggableInterface {
             $category_name = trim($category_name);
             $category_slug = str_slug($category_name);
 
-            $category = $categoriesrepo->where('slug', $category_slug)->first();
+            $category = $categoriesrepo->where('slug', $category_slug);
+
+            if ( is_object($parent) )
+                $category->where('parent', $parent->id);
+
+            $category = $category->first();
 
             if ( !$category ) {
 
