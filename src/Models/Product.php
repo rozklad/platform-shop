@@ -556,7 +556,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
         {
 
             $category_name = trim($category_name);
-            $category_slug = str_slug($category_name);
+            $category_slug = str_slug(str_replace('/', '-', $category_name));
 
             $category = $categoriesrepo->where('slug', $category_slug);
 
