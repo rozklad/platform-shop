@@ -265,7 +265,7 @@ class ProductRepository implements ProductRepositoryInterface {
             if ( !is_object($param) )
                 return [];
 
-            $urls = \Platform\Attributes\Models\Value::where('attribute_id', $param->id)->lists('id', 'value');
+            $urls = \Platform\Attributes\Models\Value::where('attribute_id', $param->id)->lists('entity_id', 'value');
 
             return $urls;
 

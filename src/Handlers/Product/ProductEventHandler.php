@@ -36,7 +36,7 @@ class ProductEventHandler extends BaseEventHandler implements ProductEventHandle
 	{
 		$this->flushCache($product);
 
-		//$this->refreshLists();
+		$this->refreshLists();
 	}
 
 	/**
