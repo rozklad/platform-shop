@@ -78,6 +78,8 @@ class ProductEventHandler extends BaseEventHandler implements ProductEventHandle
 		$this->app['cache']->forget('sanatorium.shop.product.all');
 
 		$this->app['cache']->forget('sanatorium.shop.product.'.$product->id);
+
+        $this->app['cache']->forget('sanatorium.shop.redirects');
 	}
 
 	protected function refreshLists()

@@ -248,4 +248,28 @@ class ProductRepository implements ProductRepositoryInterface {
 		return $this->update($id, [ 'enabled' => false ]);
 	}
 
+    /**
+     * Get list of old urls to redirect
+     * @param string $param_slug
+     * @return mixed
+     */
+	public function getRedirects($param_slug = 'old_url')
+    {
+        return $this->container['cache']->rememberForever('sanatorium.shop.redirects', function() use ($param_slug)
+        {
+
+            $attributes = app('platform.attributes');
+
+            $param = $attributes->where('slug', $param_slug)->first();
+
+            if ( !is_object($param) )
+                return [];
+
+            $urls = \Platform\Attributes\Models\Value::where('attribute_id', $param->id)->lists('id', 'value');
+
+            return $urls;
+
+        });
+    }
+
 }
