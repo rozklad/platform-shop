@@ -336,7 +336,7 @@ jQuery(document).ready(function($) {
 					{{-- Product description tab --}}
 					@if ( $product->product_description )
 					<div role="tabpanel" class="tab-pane product-description active" id="description">
-						<p>{!! nl2br($product->product_description) !!}</p>
+						<p>{!! $product->product_description !!}</p>
 					</div>
 					@endif
 
