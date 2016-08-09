@@ -371,9 +371,9 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 
                 $media = app('platform.media')->find($media_id);
 
-                $thumb = StorageUrl::url(self::getSizeUrl($media, $thumbsize, $thumbsize));
+                $thumb = storage_url(self::getSizeUrl($media, $thumbsize, $thumbsize));
 
-                $full = StorageUrl::url(self::getSizeUrl($media, $size, $size));
+                $full = storage_url(self::getSizeUrl($media, $size, $size));
 
                 $output[ $thumb ] = $full;
 
@@ -420,7 +420,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 			return null;
 
 		$this->cover_object = $medium;
-		$this->cover_image = StorageUrl::url( self::getSizeUrl($medium, $size) );
+		$this->cover_image = storage_url( self::getSizeUrl($medium, $size) );
 
 		return $this->cover_image;
 
@@ -461,7 +461,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		if ( !$this->intervention )
 			$this->intervention = app('image');
 
-		$original = StorageUrl::url( $media->path );
+		$original = storage_url( $media->path );
 
 		// Loop through all the registered styles
 		foreach ($this->styles->getStyles() as $name => $style) {
