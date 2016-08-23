@@ -447,7 +447,7 @@ class Product extends Model implements EntityInterface, TaggableInterface {
 		{
 			// Sanatorium/Thumbs thumb macro
 			default:
-				return thumbnail_path($media, $size, $size);
+				return thumbnail_url($media, $size, $size);
 				break;
 		}
 
