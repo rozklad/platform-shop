@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'info' => 'Page :currentPage of :lastPage, total :total items'
+	'info' => 'Stránka :currentPage z :lastPage, celkem :total produktů'
 ];
