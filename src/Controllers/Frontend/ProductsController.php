@@ -15,6 +15,11 @@ class ProductsController extends Controller {
 		return view('sanatorium/shop::index');
 	}
 
+	public function view($slug)
+    {
+        return $this->productBySlug($slug);
+    }
+
 	public function productBySlug($slug)
 	{
 		$product = Product::where('slug', $slug)->first();

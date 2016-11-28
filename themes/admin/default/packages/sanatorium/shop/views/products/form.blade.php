@@ -11,10 +11,60 @@
 
 {{ Asset::queue('selectize', 'selectize/css/selectize.bootstrap3.css', 'styles') }}
 {{ Asset::queue('selectize', 'selectize/js/selectize.js', 'jquery') }}
+{{ Asset::queue('vue', 'sanatorium/shop::vue/vue.min.js') }}
 
 {{-- Inline scripts --}}
 @section('scripts')
 @parent
+	<script type="text/javascript">
+		@if ( $product->exists )
+		// Variants table
+		var Variants = new Vue({
+			el: '#table-variants',
+			data: {
+				attributes: {!! app('platform.attributes')->whereNamespace(\Sanatorium\Variants\Models\Variant::getEntityNamespace())->lists('name', 'slug')->toJson() !!},
+				variants: {!! json_encode(Sanatorium\Variants\Controllers\Admin\VariantsController::getVariants($product)) !!}
+			},
+			methods: {
+				addVariant: function() {
+					this.variants.splice(this.variants.length, 0, {
+						draft: true
+					});
+				},
+				removeVariant: function(variant) {
+					this.variants.$remove(variant);
+					this.storeSettings();
+				},
+				saveVariant: function(variant) {
+
+					if ( typeof variant.attributes == 'undefined' )
+					{
+						alert('Musíte specifikovat alespoň jednu hodnotu varianty');
+						return;
+					}
+
+					this.storeSettings();
+				},
+				storeSettings: function() {
+					var settings = JSON.stringify(this.variants);
+
+					var self = this;
+
+					$.ajax({
+						url: '{{ route('admin.sanatorium.variants.variants.product') }}',
+						type: 'POST',
+						data: {
+							product: {{ $product->id }},
+							settings: settings
+						}
+					}).success(function(data){
+						self.variants = data;
+					});
+				}
+			}
+		});
+		@endif
+	</script>
 @stop
 
 {{-- Inline styles --}}
@@ -65,6 +115,12 @@
 
 						<ul class="nav navbar-nav navbar-right">
 
+							<li>
+								<a href="{{ route('sanatorium.shop.products.view', $product->slug) }}" class="tip" data-toggle="tooltip" data-original-title="{{{ trans('action.show') }}}" target="_blank">
+									<i class="fa fa-eye"></i> <span class="visible-xs-inline">{{{ trans('action.show') }}}</span>
+								</a>
+							</li>
+
 							@if ($product->exists)
 							<li>
 								<a href="{{ route('admin.sanatorium.shop.products.delete', $product->id) }}" class="tip" data-action-delete data-toggle="tooltip" data-original-title="{{{ trans('action.delete') }}}" type="delete">
@@ -101,6 +157,7 @@
 					<li role="presentation"><a href="#tags-tab" aria-controls="tags-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.tags') }}}</a></li>
 					<li role="presentation"><a href="#categories-tab" aria-controls="categories-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.categories') }}}</a></li>
 					<li role="presentation"><a href="#manufacturers-tab" aria-controls="manufacturers-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/shop::products/common.tabs.manufacturers') }}}</a></li>
+					<li role="presentation"><a href="#variants-tab" aria-controls="variants-tab" role="tab" data-toggle="tab">{{{ trans('sanatorium/variants::variants/common.title') }}}</a></li>
 				</ul>
 
 				<div class="tab-content">
@@ -265,6 +322,7 @@
 
 					</div>
 
+					{{-- Manufacturers --}}
 					<div class="tab-pane fade" id="manufacturers-tab">
 						
 						<div class="attributes-inline">
@@ -272,6 +330,61 @@
 							@manufacturers($product)
 
 						</div>
+
+					</div>
+
+					{{-- Variants --}}
+					<div class="tab-pane fade" id="variants-tab">
+
+						@if ( $product->exists )
+						<table class="table table-responsive table-variants" id="table-variants">
+							<thead>
+								<tr>
+									<th width="50">#</th>
+									<th v-for="attribute in attributes">
+										<?= '{{ attribute }}' ?>
+									</th>
+									<th width="50"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-for="variant in variants">
+									<td v-if="variant.draft"></td>
+									<td v-if="variant.draft" v-for="(slug, attribute) in attributes" style="vertical-align: middle">
+										<input type="text" class="form-control" v-model="variant.attributes[slug]">
+									</td>
+									<td v-if="variant.draft" style="vertical-align: middle">
+										<a @click="saveVariant(variant)" class="btn btn-primary">
+											<i class="fa fa-save"></i>
+										</a>
+									</td>
+
+									<td v-if="!variant.draft" style="vertical-align: middle"><small><?= '{{ variant.id }} ' ?></small></td>
+									<td v-if="!variant.draft" v-for="(slug, attribute) in attributes" style="vertical-align: middle">
+										<?= '{{ typeof variant.attributes[slug] != "undefined" ? variant.attributes[slug] : "—" }}' ?>
+									</td>
+									<td v-if="!variant.draft" style="vertical-align: middle">
+										<a @click="removeVariant(variant)" class="btn btn-default">
+											<i class="fa fa-trash-o"></i>
+										</a>
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan="<?= '{{ attributes.length + 1 }} ' ?>">
+										<a @click="addVariant()" class="btn btn-default">
+											<i class="fa fa-plus"></i>
+										</a>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+						@else
+							<p class="alert alert-info">
+								Produkt musíte nejprve uložit, aby bylo možné specifikovat varianty
+							</p>
+						@endif
 
 					</div>
 
