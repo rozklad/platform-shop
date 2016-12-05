@@ -34,6 +34,10 @@
 		{{ $product->product_title }}
 	</h3>
 
+	<div class="product-description">
+		{!! $product->short_description !!}
+	</div>
+
 	{{-- @todo: move to shoppricing --}}
 	<div class="price product-common-price product-price-default">
 		{{ trans('sanatorium/pricing::general.price.no_vat') }} {{ $product->price }}
