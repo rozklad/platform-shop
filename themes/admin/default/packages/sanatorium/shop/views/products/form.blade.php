@@ -341,17 +341,37 @@
 							<thead>
 								<tr>
 									<th width="50">#</th>
+									<th>{{ trans('sanatorium/shop::products/model.general.code') }}</th>
+									<th>{{ trans('sanatorium/shop::products/model.general.ean') }}</th>
 									<th v-for="attribute in attributes">
 										<?= '{{ attribute }}' ?>
 									</th>
+									<th>{{ trans('sanatorium/shop::products/model.general.weight') }}</th>
+									<th>{{ trans('sanatorium/shop::products/model.general.stock') }}</th>
+									<th>{{ trans('sanatorium/pricing::general.price.vat') }}</th>
 									<th width="50"></th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr v-for="variant in variants">
 									<td v-if="variant.draft"></td>
+									<td v-if="variant.draft">
+										<input type="text" class="form-control" v-model="variant.attributes[code]">
+									</td>
+									<td v-if="variant.draft">
+										<input type="text" class="form-control" v-model="variant.attributes[ean]">
+									</td>
 									<td v-if="variant.draft" v-for="(slug, attribute) in attributes" style="vertical-align: middle">
 										<input type="text" class="form-control" v-model="variant.attributes[slug]">
+									</td>
+									<td v-if="variant.draft">
+										<input type="text" class="form-control" v-model="variant.attributes[weight]">
+									</td>
+									<td v-if="variant.draft">
+										<input type="text" class="form-control" v-model="variant.attributes[stock]">
+									</td>
+									<td v-if="variant.draft">
+										<input type="text" class="form-control" v-model="variant.attributes[price_vat]">
 									</td>
 									<td v-if="variant.draft" style="vertical-align: middle">
 										<a @click="saveVariant(variant)" class="btn btn-primary">
@@ -360,9 +380,14 @@
 									</td>
 
 									<td v-if="!variant.draft" style="vertical-align: middle"><small><?= '{{ variant.id }} ' ?></small></td>
+									<td v-if="!variant.draft" style="vertical-align: middle"><small><?= '{{ variant.code }} ' ?></small></td>
+									<td v-if="!variant.draft" style="vertical-align: middle"><small><?= '{{ variant.ean }} ' ?></small></td>
 									<td v-if="!variant.draft" v-for="(slug, attribute) in attributes" style="vertical-align: middle">
 										<?= '{{ typeof variant.attributes[slug] != "undefined" ? variant.attributes[slug] : "—" }}' ?>
 									</td>
+									<td v-if="!variant.draft" style="vertical-align: middle"><small><?= '{{ variant.weight }} ' ?></small></td>
+									<td v-if="!variant.draft" style="vertical-align: middle"><small><?= '{{ variant.stock }} ' ?></small></td>
+									<td v-if="!variant.draft" style="vertical-align: middle"><small><?= '{{ variant.price_vat }} ' ?></small></td>
 									<td v-if="!variant.draft" style="vertical-align: middle">
 										<a @click="removeVariant(variant)" class="btn btn-default">
 											<i class="fa fa-trash-o"></i>
