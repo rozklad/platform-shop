@@ -67,7 +67,7 @@ return [
 	|
 	*/
 
-	'version' => '3.0.9',
+	'version' => '3.0.10',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -174,6 +174,19 @@ return [
 
 			Route::get('/{slug}', ['as' => 'sanatorium.shop.products.view', 'uses' => 'ProductsController@view']);
 		});
+
+        // Temporary solution
+        Route::post(admin_uri().'/shop/settings', ['as' => 'sanatorium.shop.settings', 'uses' => function() {
+
+            if ( request()->has('home') ) {
+
+                Config::persist('sanatorium-shop.home.products', request()->get('home'));
+
+            }
+
+            return redirect()->back();
+
+        }]);
 	},
 
 	/*
